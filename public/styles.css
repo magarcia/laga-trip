@@ -49,8 +49,8 @@ body{
 /* Hidden scrollbars (scrolling stays fully functional) */
 html,body{scrollbar-width:none}
 html::-webkit-scrollbar,body::-webkit-scrollbar{width:0;height:0;display:none}
-.fcast,.tide-days,.nearrow,.timeline{scrollbar-width:none;-ms-overflow-style:none}
-.fcast::-webkit-scrollbar,.tide-days::-webkit-scrollbar,.nearrow::-webkit-scrollbar{display:none}
+.fcast,.tide-days{scrollbar-width:none;-ms-overflow-style:none}
+.fcast::-webkit-scrollbar,.tide-days::-webkit-scrollbar{display:none}
 h1,h2,h3,h4{margin:0; line-height:1.04; font-family:var(--disp); font-weight:800; letter-spacing:-.02em}
 p{margin:0}
 a{color:inherit; text-decoration:none}
@@ -228,6 +228,14 @@ body.show-past .leg.past .leg-extra{display:block}
 .stat .k{font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px}
 .stat .k .ic{font-size:14px; color:var(--accent-text)}
 
+/* ---------- Surf: turnos (camp class shifts) ---------- */
+.turnos{width:100%; border-collapse:collapse; margin-top:15px; table-layout:fixed}
+.turnos caption{caption-side:top; text-align:left; color:var(--muted); font-size:12.5px; line-height:1.4; margin-bottom:9px}
+.turnos th,.turnos td{padding:8px 4px; text-align:center; border-top:1px solid var(--line)}
+.turnos thead th{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--muted); font-weight:500; border-top:0}
+.turnos tbody th{text-align:left; font-weight:600; font-size:13.5px; color:var(--ink); white-space:nowrap}
+.turnos td{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--ink-soft)}
+
 /* ---------- Surf data-viz (tide / waves / gauges / avisos) ---------- */
 /* Day selector (segmented control) */
 .tide-days{display:flex; gap:6px; overflow-x:auto; -webkit-overflow-scrolling:touch; margin:14px 0 4px; padding-bottom:2px}
@@ -275,7 +283,7 @@ body.show-past .leg.past .leg-extra{display:block}
 .tide-legend .sw-mid{background:repeating-linear-gradient(90deg,var(--ok) 0 3px,transparent 3px 6px); border-radius:0; height:3px; margin-top:5px}
 
 /* Wave bars */
-.bars{display:grid; grid-template-columns:repeat(5,1fr); gap:10px; align-items:end; margin-top:16px; height:148px}
+.bars{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; align-items:end; margin-top:16px; height:148px}
 .bar-col{display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:7px}
 .bar-val{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; font-weight:500; color:var(--ink)}
 .bar-track{position:relative; width:100%; max-width:40px; flex:1; display:flex; align-items:flex-end;
@@ -331,10 +339,11 @@ ul.plist li:first-child{border-top:0}
   .place{transition:transform .07s}
   .place:active{transform:scale(.98)}
 }
-.nearrow{display:flex; gap:9px; overflow-x:auto; padding-bottom:10px; -webkit-overflow-scrolling:touch}
-.nearchip{flex:none; display:inline-flex; align-items:center; gap:8px; padding:11px 15px; border-radius:999px;
+.nearrow{display:grid; grid-template-columns:repeat(2,1fr); gap:9px}
+.nearchip{display:flex; align-items:center; justify-content:center; gap:8px; padding:13px 14px; border-radius:999px;
   background:var(--accent-soft); color:var(--accent-text); font-weight:600; font-size:14px; border:0}
 .nearchip .ic{font-size:17px}
+@media (min-width:560px){.nearrow{grid-template-columns:repeat(4,1fr)}}
 
 footer{color:var(--faint); font-size:12.5px; text-align:center; padding:20px 18px 18px; line-height:1.7}
 footer .mono{font-size:11.5px}

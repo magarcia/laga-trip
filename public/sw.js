@@ -1,11 +1,11 @@
 // Offline cache for the Laga trip app. Bump CACHE on every content change.
-const CACHE = "laga-trip-v8";
+const CACHE = "laga-trip-v10";
 const ASSETS = [
   "/", "/index.html", "/styles.css", "/app.js", "/manifest.webmanifest", "/icon.svg",
   "/fonts/bricolage-700.woff2", "/fonts/bricolage-800.woff2",
   "/fonts/geist-400.woff2", "/fonts/geist-500.woff2", "/fonts/geist-600.woff2",
   "/fonts/geistmono-500.woff2",
-  "/img/surf-hero.jpg", "/img/walkout.jpg",
+  "/img/surf-hero.jpg", "/img/surf-clase.jpg",
 ];
 
 self.addEventListener("install", (e) => {
