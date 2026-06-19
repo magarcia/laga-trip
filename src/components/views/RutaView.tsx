@@ -147,7 +147,7 @@ export function RutaView({ active, showPast, onTogglePast }: RutaViewProps) {
                 <Icon name="i-waves" />
                 Surf
               </dt>
-              <dd>iniciación · 3 clases · estar 30 min antes</dd>
+              <dd>iniciación · 4 clases · estar 30 min antes</dd>
             </dl>
             <div className="mapembed leg-extra">
               <iframe
