@@ -32,12 +32,34 @@ export function madridMinutes(d: Date): number {
 export function parseNowParam(search: string): Date | null {
   const raw = new URLSearchParams(search).get("now");
   if (!raw) return null;
-  let p = raw.trim();
-  // A literal "+02:00" in the query is decoded by URLSearchParams to " 02:00"; restore the sign.
-  p = p.replace(/ (\d\d:?\d\d)$/, "+$1");
-  // A bare datetime (no offset) would parse in the device tz; force Madrid CEST so previews are stable everywhere.
-  if (!/(?:[zZ]|[+-]\d\d:?\d\d)$/.test(p)) p += "+02:00";
-  const d = new Date(p);
+  const p = raw.trim();
+
+  // Split into the date and an optional remainder (the time, then optional offset). A "T" or a
+  // space separates date from time; a date-only input has no separator.
+  const m = /^(\d{4}-\d{2}-\d{2})(?:[T ](.*))?$/.exec(p);
+  if (!m) return null;
+  const [, date, rest] = m;
+
+  // Date-only: preview that day at Madrid midnight. A bare "YYYY-MM-DD+02:00" is rejected by Date,
+  // so a full time component is required.
+  if (rest == null || rest === "") return finalize(`${date}T00:00:00+02:00`);
+
+  // A literal "+02:00" in the query decodes to a leading space in the offset (URLSearchParams turns
+  // "+" into " "). The wall-clock time and a space-decoded offset look alike, so we only treat a
+  // trailing " HH:MM"/" HHMM" as an offset when a full time already precedes it.
+  const offset = / (\d\d:?\d\d)$/;
+  let time = rest;
+  if (offset.test(time)) {
+    time = time.replace(offset, "+$1");
+  } else if (!/(?:[zZ]|[+-]\d\d:?\d\d)$/.test(time)) {
+    // Bare datetime (no offset): force Madrid CEST so previews are stable regardless of device tz.
+    time += "+02:00";
+  }
+  return finalize(`${date}T${time}`);
+}
+
+function finalize(iso: string): Date | null {
+  const d = new Date(iso);
   return isNaN(d.getTime()) ? null : d;
 }
 

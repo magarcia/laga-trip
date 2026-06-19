@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       manifest: false, // keep the existing public/manifest.webmanifest verbatim
       includeAssets: ["icon.svg", "favicon.ico", "apple-touch-icon.png", "fonts/**/*.woff2", "img/**/*"],
       workbox: {

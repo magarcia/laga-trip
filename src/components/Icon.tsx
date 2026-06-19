@@ -10,7 +10,7 @@ interface IconProps {
 // like "ic ar", "ic go", "ic gauge-ic", "ic pl-ic".
 export function Icon({ name, className = "ic", style }: IconProps) {
   return (
-    <svg className={className} style={style}>
+    <svg className={className} style={style} aria-hidden="true" focusable="false">
       <use href={`#${name}`} />
     </svg>
   );

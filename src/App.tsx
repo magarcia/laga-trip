@@ -8,6 +8,7 @@ import { Sprite } from "./components/Sprite";
 import { Rail } from "./components/Rail";
 import { TabBar } from "./components/TabBar";
 import { OfflineBanner } from "./components/OfflineBanner";
+import { UpdateToast } from "./components/UpdateToast";
 import { Footer } from "./components/Footer";
 import { HoyView } from "./components/views/HoyView";
 import { RutaView } from "./components/views/RutaView";
@@ -61,6 +62,7 @@ export function App() {
             <Footer />
           </main>
           <TabBar tab={tab} onSelect={selectTab} />
+          <UpdateToast />
         </div>
       </ForecastContext.Provider>
     </NowContext.Provider>

@@ -1,5 +1,6 @@
 import { Hero } from "../hoy/Hero";
 import { Ribbon } from "../hoy/Ribbon";
+import { NextDeparture } from "../hoy/NextDeparture";
 import { TodayCard } from "../hoy/TodayCard";
 
 export function HoyView({ active }: { active: boolean }) {
@@ -9,6 +10,7 @@ export function HoyView({ active }: { active: boolean }) {
       <div className="hoy-sheet">
         <Ribbon />
         <div className="pad">
+          <NextDeparture />
           <TodayCard />
         </div>
       </div>

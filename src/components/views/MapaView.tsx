@@ -1,4 +1,28 @@
 import { Icon } from "../Icon";
+import { EMERGENCY, HEALTH, REMINDERS, type Essential } from "../../lib/essentials";
+
+function EssentialItem({ item }: { item: Essential }) {
+  const isPhone = item.href?.startsWith("tel:");
+  const inner = (
+    <>
+      {item.href && <Icon name={isPhone ? "i-phone" : "i-ext"} className="ic go" />}
+      <Icon name={item.icon} className="ic pl-ic" />
+      <span className="pl-n">{item.name}</span>
+      <span className="pl-s">{item.sub}</span>
+    </>
+  );
+  if (!item.href) return <div className="place">{inner}</div>;
+  // tel: links must work offline (no target=_blank); Maps links open in a new tab.
+  return isPhone ? (
+    <a className="place" href={item.href}>
+      {inner}
+    </a>
+  ) : (
+    <a className="place" target="_blank" rel="noopener" href={item.href}>
+      {inner}
+    </a>
+  );
+}
 
 interface Place {
   href: string;
@@ -59,6 +83,43 @@ export function MapaView({ active }: { active: boolean }) {
       <div className="pad">
         <h2 className="section-h">Sobre el terreno</h2>
         <p className="section-sub">Sitios clave y búsquedas rápidas alrededor de Laga. Cada tarjeta abre Google Maps.</p>
+
+        <div className="panel">
+          <div className="panel-h">
+            <span className="badge">
+              <Icon name="i-triangle-alert" />
+            </span>
+            <div>
+              <h3>SOS y esenciales</h3>
+              <div className="where">Funciona sin conexión · las llamadas no necesitan datos</div>
+            </div>
+          </div>
+
+          <div className="places" style={{ marginTop: 14 }}>
+            {EMERGENCY.map((e) => (
+              <EssentialItem key={e.name} item={e} />
+            ))}
+          </div>
+
+          <h4 style={{ fontSize: ".95rem", margin: "16px 0 9px" }}>Salud cerca</h4>
+          <div className="places">
+            {HEALTH.map((e) => (
+              <EssentialItem key={e.name} item={e} />
+            ))}
+          </div>
+
+          <h4 style={{ fontSize: ".95rem", margin: "16px 0 9px" }}>Horarios</h4>
+          <div className="places">
+            {REMINDERS.map((e) => (
+              <EssentialItem key={e.name} item={e} />
+            ))}
+          </div>
+
+          <div className="note">
+            <Icon name="i-info" /> En urgencia grave, 112 antes que nada. La farmacia de guardia rota: la búsqueda de Maps
+            la muestra cuando hay conexión.
+          </div>
+        </div>
 
         <div className="places" style={{ marginBottom: 16 }}>
           {PLACES.map((p) => (

@@ -3,15 +3,16 @@ import { B, lagaDay, legState } from "../../lib/timeline";
 import { Icon } from "../Icon";
 import { Leg } from "../ruta/Leg";
 
-const LEG_TIMES = (
-  [
-    ["2026-06-19T23:00:00+02:00", "2026-06-20T07:00:00+02:00"],
-    ["2026-06-20T07:00:00+02:00", "2026-06-20T14:00:00+02:00"],
-    ["2026-06-20T14:00:00+02:00", "2026-06-23T17:00:00+02:00"],
-    ["2026-06-23T17:00:00+02:00", "2026-06-24T10:30:00+02:00"],
-    ["2026-06-24T10:30:00+02:00", "2026-06-24T18:00:00+02:00"],
-  ] as const
-).map(([s, e]) => [new Date(s), new Date(e)] as const);
+// Derived from the single source of truth (B in timeline.ts): each leg's
+// [start, end] is a pair of adjacent phase boundaries, so leg states can never
+// silently desync from the hero phase.
+const LEG_TIMES = [
+  [B.depart, B.arriveBilbao],
+  [B.arriveBilbao, B.checkin],
+  [B.checkin, B.leaveLaga],
+  [B.leaveLaga, B.returnDepart],
+  [B.returnDepart, B.returnArrive],
+] as const;
 
 interface RutaViewProps {
   active: boolean;
@@ -101,7 +102,7 @@ export function RutaView({ active, showPast, onTogglePast }: RutaViewProps) {
                 <Icon name="i-pin" />
                 Bajar
               </dt>
-              <dd>parada Elejalde 12, Ibarrangelu · ~1 min al hostel</dd>
+              <dd>parada Elexalde 12, Ibarrangelu · ~1 min al hostel</dd>
               <dt>
                 <Icon name="i-clock" />
                 Frecuencia
@@ -109,12 +110,14 @@ export function RutaView({ active, showPast, onTogglePast }: RutaViewProps) {
               <dd>cada 2 h · check-in 14:00</dd>
             </dl>
             <div className="mapembed leg-extra">
-              <iframe
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Ruta en transporte público de Bilbao a Laga"
-                src="https://maps.google.com/maps?saddr=Bilbao+Intermodal,+Gurtubay+Kalea+1,+48013+Bilbao&daddr=Laga+Surf+Camp+Hostel,+Elexalde+Auzoa+11,+48311+Elexalde&dirflg=r&output=embed"
-              ></iframe>
+              {active && (
+                <iframe
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ruta en transporte público de Bilbao a Laga"
+                  src="https://maps.google.com/maps?saddr=Bilbao+Intermodal,+Gurtubay+Kalea+1,+48013+Bilbao&daddr=Laga+Surf+Camp+Hostel,+Elexalde+Auzoa+11,+48311+Elexalde&dirflg=r&output=embed"
+                ></iframe>
+              )}
             </div>
             <div className="actions leg-extra">
               <a
@@ -150,12 +153,14 @@ export function RutaView({ active, showPast, onTogglePast }: RutaViewProps) {
               <dd>iniciación · 4 clases · estar 30 min antes</dd>
             </dl>
             <div className="mapembed leg-extra">
-              <iframe
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Mapa de Laga Surf Camp Hostel"
-                src="https://maps.google.com/maps?q=Laga+Surf+Camp+Hostel,+Elexalde+Auzoa+11,+48311+Elexalde&output=embed"
-              ></iframe>
+              {active && (
+                <iframe
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Mapa de Laga Surf Camp Hostel"
+                  src="https://maps.google.com/maps?q=Laga+Surf+Camp+Hostel,+Elexalde+Auzoa+11,+48311+Elexalde&output=embed"
+                ></iframe>
+              )}
             </div>
             <div className="actions leg-extra">
               <a
@@ -203,12 +208,14 @@ export function RutaView({ active, showPast, onTogglePast }: RutaViewProps) {
               <dd>bcool, Fernández del Campo Kalea 6, 48010 Bilbao · metro y tren cerca</dd>
             </dl>
             <div className="mapembed leg-extra">
-              <iframe
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Ruta en transporte público de Laga a Bilbao"
-                src="https://maps.google.com/maps?saddr=Laga+Surf+Camp+Hostel,+Elexalde+Auzoa+11,+48311+Elexalde&daddr=Fernández+del+Campo+Kalea+6,+48010+Bilbao&dirflg=r&output=embed"
-              ></iframe>
+              {active && (
+                <iframe
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ruta en transporte público de Laga a Bilbao"
+                  src="https://maps.google.com/maps?saddr=Laga+Surf+Camp+Hostel,+Elexalde+Auzoa+11,+48311+Elexalde&daddr=Fernández+del+Campo+Kalea+6,+48010+Bilbao&dirflg=r&output=embed"
+                ></iframe>
+              )}
             </div>
             <div className="actions leg-extra">
               <a
