@@ -192,6 +192,10 @@ body.show-past .leg.past .leg-extra{display:block}
 .legtimes{display:flex; align-items:center; gap:10px; margin-top:12px; font-family:var(--mono); font-size:15px; font-weight:500}
 .legtimes .ar{color:var(--faint)}
 .legtimes small{font-family:var(--body); font-size:11px; color:var(--muted); display:block; font-weight:500; letter-spacing:0}
+/* Many-departures list: wrap into small mono chips instead of one overflowing line. */
+.timechips{display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 0; padding:0; list-style:none}
+.timechip{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:12px; font-weight:500; color:var(--ink-soft);
+  background:var(--surface-2); border:1px solid var(--line); border-radius:var(--r-sm); padding:3px 8px}
 .toggle-past{display:inline-flex; align-items:center; gap:6px; margin:0 0 14px; background:none; border:0;
   color:var(--muted); font:inherit; font-size:13px; font-weight:600; cursor:pointer; padding:11px 0; min-height:44px}
 .toggle-past .ic{font-size:15px}
@@ -223,10 +227,23 @@ body.show-past .leg.past .leg-extra{display:block}
 .fday .fd-t small{font-family:var(--mono); font-size:.85rem; color:var(--muted); font-weight:500}
 .fday .fd-row{display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); margin-top:7px}
 .fday .fd-row .ic{font-size:14px; color:var(--faint)}
-.statline{display:flex; gap:18px; flex-wrap:wrap; margin-top:4px}
+.statline{display:flex; gap:18px; flex-wrap:wrap; margin-top:4px; justify-content:space-evenly}
+.stat{display:flex; flex-direction:column; align-items:center; text-align:center}
 .stat .v{font-family:var(--disp); font-weight:800; font-size:1.7rem}
 .stat .k{font-size:12px; color:var(--muted); display:flex; align-items:center; gap:5px}
 .stat .k .ic{font-size:14px; color:var(--accent-text)}
+.stat .statval{display:inline-flex; align-items:center; gap:7px}
+.stat .statval .dir-arrow{font-size:1rem}
+.wind-compass{font-size:.95rem; font-weight:600; color:var(--ink-soft)}
+/* Water-temp warmth swatch beside the range. */
+.water-dot{display:inline-block; width:11px; height:11px; border-radius:50%; flex:none; box-shadow:0 0 0 1px rgba(0,0,0,.08)}
+/* UV gauge: a quiet track with a band-colored marker at the index value, in the app's gauge language. */
+.uv-gauge{position:relative; width:84px; height:8px; margin:5px 0 2px}
+.uv-track{position:absolute; inset:0; border-radius:999px;
+  background:linear-gradient(90deg,#3ea72d 0 17%,#f7d000 17% 42%,#f08800 42% 58%,#d8001d 58% 83%,#8a2be2 83% 100%);
+  opacity:.4}
+.uv-mark{position:absolute; top:50%; width:10px; height:10px; border-radius:50%; transform:translate(-50%,-50%);
+  box-shadow:0 0 0 2px var(--surface), 0 1px 2px rgba(0,0,0,.25)}
 
 /* ---------- Surf: turnos (camp class shifts) ---------- */
 .turnos{width:100%; border-collapse:collapse; margin-top:15px; table-layout:fixed}
@@ -234,7 +251,87 @@ body.show-past .leg.past .leg-extra{display:block}
 .turnos th,.turnos td{padding:8px 4px; text-align:center; border-top:1px solid var(--line)}
 .turnos thead th{font-family:var(--mono); font-size:11px; letter-spacing:.04em; color:var(--muted); font-weight:500; border-top:0}
 .turnos tbody th{text-align:left; font-weight:600; font-size:13.5px; color:var(--ink); white-space:nowrap}
-.turnos td{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--ink-soft)}
+.turnos td{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--ink-soft); position:relative}
+/* Mid-tide turns: a subtle amber dot, plus a legend below. Non-color cue is the sr-text in the cell. */
+.turno-dot{display:inline-block; width:5px; height:5px; margin-left:4px; border-radius:50%; background:var(--accent); vertical-align:middle}
+.turnos td.turno-mid{color:var(--ink)}
+.turnos-legend{display:flex; align-items:center; gap:6px; margin-top:8px; font-size:12px; color:var(--muted)}
+
+/* ---------- Surf: section head + freshness ---------- */
+.section-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.freshness{font-family:var(--mono); font-size:11.5px; color:var(--faint); letter-spacing:.01em}
+
+/* ---------- Surf: "¿Me meto?" verdict chip ----------
+   A calm summary line, not the loudest element. Neutral surface; the verdict reads from a small
+   colored status badge (green good / amber care / red watch), not a loud full-amber fill. */
+.memeto{display:flex; align-items:center; gap:11px; width:100%; padding:11px 14px; border-radius:var(--r-sm);
+  border:1px solid var(--line); background:var(--surface-2); margin:8px 0 4px}
+.memeto-ic{font-size:16px; flex:none; width:26px; height:26px; border-radius:50%; display:grid; place-items:center}
+.memeto-text{display:flex; flex-direction:column; gap:1px; min-width:0}
+.memeto-title{font-family:var(--disp); font-weight:700; font-size:.98rem; color:var(--ink); letter-spacing:-.01em}
+.memeto-why{font-size:12px; color:var(--muted)}
+/* Verdict accent lives only in the status badge, keeping the chip quiet overall. */
+.memeto-good .memeto-ic{color:var(--ok); background:var(--ok-soft)}
+.memeto-care .memeto-ic{color:var(--accent-text); background:var(--accent-soft)}
+.memeto-watch .memeto-ic{color:#c0392b; background:rgba(192,57,43,.12)}
+@media (prefers-color-scheme:dark){
+  .memeto-watch .memeto-ic{color:#ef6f61; background:rgba(239,111,97,.16)}
+}
+
+/* ---------- Surf: gauge extras (swell dir, wind cleanliness, credit) ---------- */
+.gauge-sub{display:flex; align-items:center; gap:5px; margin-top:6px; font-size:11px; color:var(--muted)}
+.gauge-sub .mono{color:var(--ink-soft); font-weight:500}
+.gauge-wind-k{display:flex; align-items:center; gap:5px}
+.gauge-credit{font-size:10px; color:var(--faint); margin-top:5px}
+
+/* Direction arrow (shared): base glyph points up; the wrapper is rotated to the travel direction. */
+.dir-arrow{display:inline-flex; width:1em; height:1em; line-height:0; color:var(--accent-text)}
+.dir-arrow .ic{font-size:13px}
+
+/* ---------- Surf: expandable per-day detail (B5) ---------- */
+.fday{position:relative; cursor:pointer; text-align:left; appearance:none; font:inherit; color:inherit; width:124px}
+/* The toggle chevron is hidden by default so the collapsed strip is visually identical to before; it
+   reveals on hover/focus (discoverability) and stays shown while the card is open. */
+.fday .fd-toggle{position:absolute; top:8px; right:9px; opacity:0; transition:opacity .15s}
+.fday:hover .fd-toggle,.fday:focus-visible .fd-toggle,.fday-open .fd-toggle{opacity:1}
+.fday .fd-chev{font-size:14px; color:var(--faint); transform:rotate(90deg); transition:transform .2s}
+.fday-open .fd-chev{transform:rotate(-90deg); color:var(--accent-text)}
+.fday-open{border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-soft), var(--shadow)}
+@media (prefers-reduced-motion:reduce){.fday .fd-chev,.fday .fd-toggle{transition:none}}
+
+.daydetail{margin:4px 0 14px; padding:14px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r); box-shadow:var(--shadow)}
+.daydetail-toolbar{display:flex; justify-content:flex-end; margin-bottom:10px}
+.seg{display:inline-flex; background:var(--surface-2); border:1px solid var(--line); border-radius:999px; padding:2px}
+.seg-btn{appearance:none; border:0; background:transparent; cursor:pointer; font-family:var(--mono); font-size:12px;
+  color:var(--ink-soft); padding:6px 12px; border-radius:999px; min-height:36px}
+.seg-btn[aria-pressed="true"]{background:var(--accent); color:var(--on-accent-ink)}
+
+/* Horizontal scroller with a right-edge fade mask (also fixes the strip-clips-without-affordance P1). */
+.daydetail-scroll{overflow-x:auto; -webkit-overflow-scrolling:touch;
+  -webkit-mask-image:linear-gradient(to right, #000 calc(100% - 24px), transparent);
+  mask-image:linear-gradient(to right, #000 calc(100% - 24px), transparent)}
+.daydetail-scroll::-webkit-scrollbar{height:0; display:none}
+.daydetail-scroll{scrollbar-width:none}
+
+.dd-grid{border-collapse:collapse; width:max-content; min-width:100%}
+.dd-grid + .dd-grid{margin-top:6px}
+.dd-grid th,.dd-grid td{padding:6px 7px; text-align:center; vertical-align:bottom; white-space:nowrap}
+.dd-rowhead{position:sticky; left:0; z-index:1; background:var(--surface); text-align:left;
+  font-family:var(--body); font-size:11.5px; font-weight:600; color:var(--muted); padding-right:10px}
+.dd-rel{color:var(--faint); font-weight:400}
+.dd-time{font-family:var(--mono); font-size:11px; color:var(--muted); border-bottom:1px solid var(--line); padding-bottom:5px}
+.dd-num{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; color:var(--ink); font-weight:500}
+.dd-sub{font-family:var(--mono); font-size:10px; color:var(--muted)}
+.dd-wave .dd-cell,.dd-wind .dd-cell,.dd-part .dd-cell{display:flex; flex-direction:column; align-items:center; gap:2px}
+.dd-minibar{display:flex; align-items:flex-end; width:18px; height:30px; background:var(--surface-2); border-radius:4px; overflow:hidden}
+.dd-minibar-fill{width:100%; background:var(--accent); opacity:.85; border-radius:4px}
+.dd-energy .dd-num{padding:3px 6px; border-radius:6px}
+.dd-energy-lo .dd-num{background:var(--surface-2); color:var(--ink-soft)}
+.dd-energy-mid .dd-num{background:var(--accent-soft); color:var(--accent-text)}
+.dd-energy-hi .dd-num{background:var(--accent); color:var(--on-accent-ink)}
+.dd-analysis .dd-rowhead{font-weight:500; color:var(--ink-soft)}
+.dd-note{display:flex; align-items:center; gap:6px; margin-top:10px; font-size:11.5px; color:var(--muted)}
+.dd-note .ic{font-size:13px; color:var(--faint)}
 
 /* ---------- Surf data-viz (tide / waves / gauges / avisos) ---------- */
 /* Day selector (segmented control) */
@@ -288,8 +385,14 @@ body.show-past .leg.past .leg-extra{display:block}
 .bar-val{font-family:var(--mono); font-variant-numeric:tabular-nums; font-size:13px; font-weight:500; color:var(--ink)}
 .bar-track{position:relative; width:100%; max-width:40px; flex:1; display:flex; align-items:flex-end;
   background:var(--surface-2); border-radius:var(--r-sm); overflow:hidden}
-.bar-fill{width:100%; background:var(--line); border-radius:var(--r-sm)}
-.bar-col.today .bar-fill{background:var(--accent)}
+/* Non-today bars need a real fill: --line over --surface-2 was a hairline-on-near-equal and read as empty
+   in light mode. A slate water-tone reads clearly in both schemes; today stays amber. */
+.bar-fill{width:100%; background:var(--ink-soft); opacity:.5; border-radius:var(--r-sm)}
+.bar-col.today .bar-fill{background:var(--accent); opacity:1}
+/* Non-color "today" affordance so the bar is distinguishable without relying on hue. */
+.bar-day .today-dot{display:inline-block; width:5px; height:5px; margin-left:5px; border-radius:50%;
+  background:var(--accent); vertical-align:middle}
+.bar-col.today .bar-day{font-weight:600}
 .bar-col.na .bar-track{background:transparent; border:1px dashed var(--line)}
 .bar-col.na .bar-fill{background:transparent}
 .bar-na{font-family:var(--mono); font-size:11px; color:var(--faint); align-self:center; margin-bottom:8px}

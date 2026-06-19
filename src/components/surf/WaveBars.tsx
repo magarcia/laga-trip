@@ -3,7 +3,9 @@ import { mDate } from "../../lib/time";
 import { nf1 } from "../../lib/format";
 import { Icon } from "../Icon";
 
-const MAX_WAVE = 1.0;
+// Typical Laga summer waves are 0.4-0.7 m, so a 1.0 m ceiling left bars stubby. 0.7 m fills them to a
+// readable height while still leaving headroom for the occasional bigger day (clamped at 100%).
+const MAX_WAVE = 0.7;
 const DAY_FULL: Record<string, string> = { Sáb: "sábado", Dom: "domingo", Lun: "lunes", Mar: "martes" };
 
 export function WaveBars() {
@@ -16,7 +18,7 @@ export function WaveBars() {
   const ariaLabel =
     "Altura de ola estimada por día: " +
     waves
-      .map((w, i) => `${DAY_FULL[w.label] ?? w.label} ${w.v == null ? "—" : nf1(w.v)}${i === 0 ? " metros" : ""}`)
+      .map((w, i) => `${DAY_FULL[w.label] ?? w.label} ${w.v == null ? "sin dato" : nf1(w.v)}${i === 0 && w.v != null ? " metros" : ""}`)
       .join(", ") +
     ".";
 
@@ -41,7 +43,10 @@ export function WaveBars() {
                 <div className="bar-track">
                   <div className="bar-fill" style={{ height: 0 }} />
                 </div>
-                <div className="bar-day">{w.label}</div>
+                <div className="bar-day">
+                  {w.label}
+                  {today && <span className="today-dot" aria-hidden="true" />}
+                </div>
               </div>
             );
           }
@@ -52,7 +57,10 @@ export function WaveBars() {
               <div className="bar-track">
                 <div className="bar-fill" style={{ height: `${pct}%` }} />
               </div>
-              <div className="bar-day">{w.label}</div>
+              <div className="bar-day">
+                {w.label}
+                {today && <span className="today-dot" aria-hidden="true" />}
+              </div>
             </div>
           );
         })}

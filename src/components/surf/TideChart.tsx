@@ -104,8 +104,8 @@ export function TideChart() {
         </span>
       </div>
       <div className="note">
-        <Icon name="i-info" /> La media marea es lo mejor para iniciación: ni la corriente de la baja ni el cierre de la
-        alta.
+        <Icon name="i-info" /> La media marea suele ser la mejor ventana en esta playa: ni la corriente de la baja ni el
+        cierre de la alta.
       </div>
     </div>
   );

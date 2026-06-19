@@ -51,9 +51,9 @@ export const HEALTH: Essential[] = [
   },
   {
     icon: "i-drop",
-    name: "Farmazia · la más cercana",
-    sub: "Farmacia más próxima a Laga · confirmar horario de guardia",
-    href: "https://www.google.com/maps/search/?api=1&query=Farmazia%2C%2043.3895341%2C%20-2.6313351",
+    name: "Farmazia",
+    sub: "Farmacia más cercana a Laga · confirmar horario de guardia",
+    href: "https://maps.app.goo.gl/9kXLgYBn99WAuUJj8",
     action: "Maps",
   },
   {

@@ -39,6 +39,9 @@ export function parseNowParam(search: string): Date | null {
   const m = /^(\d{4}-\d{2}-\d{2})(?:[T ](.*))?$/.exec(p);
   if (!m) return null;
   const [, date, rest] = m;
+  // The regex only checks digit shape; reject impossible calendar days (e.g. 2026-02-31) before
+  // new Date() silently rolls them over into the next month.
+  if (!isRealDate(date)) return null;
 
   // Date-only: preview that day at Madrid midnight. A bare "YYYY-MM-DD+02:00" is rejected by Date,
   // so a full time component is required.
@@ -61,6 +64,13 @@ export function parseNowParam(search: string): Date | null {
 function finalize(iso: string): Date | null {
   const d = new Date(iso);
   return isNaN(d.getTime()) ? null : d;
+}
+
+// True only for a real calendar date "YYYY-MM-DD" (rejects 2026-02-31, 2026-13-01, etc.).
+function isRealDate(ymd: string): boolean {
+  const [y, mo, d] = ymd.split("-").map(Number);
+  const dt = new Date(Date.UTC(y, mo - 1, d));
+  return dt.getUTCFullYear() === y && dt.getUTCMonth() === mo - 1 && dt.getUTCDate() === d;
 }
 
 // "2d 3h 5min" countdown; clamps negatives, omits leading zero units.

@@ -4,6 +4,9 @@ import { StatLine } from "../surf/StatLine";
 import { TideChart } from "../surf/TideChart";
 import { WaveBars } from "../surf/WaveBars";
 import { Gauges } from "../surf/Gauges";
+import { MeMeto } from "../surf/MeMeto";
+import { Freshness } from "../surf/Freshness";
+import { Turnos } from "../surf/Turnos";
 
 export function SurfView({ active }: { active: boolean }) {
   return (
@@ -24,7 +27,7 @@ export function SurfView({ active }: { active: boolean }) {
             </div>
             <div>
               <h3>Clases</h3>
-              <div className="where">Iniciación · escuela en la playa</div>
+              <div className="where">Escuela en la playa</div>
             </div>
           </div>
           <dl className="meta">
@@ -44,57 +47,20 @@ export function SurfView({ active }: { active: boolean }) {
             </dt>
             <dd>tabla y neopreno en clase</dd>
           </dl>
-          <table className="turnos">
-            <caption>Turnos publicados por el camp · orientativos, el horario real lo fija el camp según la marea</caption>
-            <thead>
-              <tr>
-                <th>Día</th>
-                <th>1º</th>
-                <th>2º</th>
-                <th>3º</th>
-                <th>4º</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>Sáb 20</th>
-                <td>10–12</td>
-                <td>12–14</td>
-                <td>14–16</td>
-                <td>16–18</td>
-              </tr>
-              <tr>
-                <th>Dom 21</th>
-                <td>10–12</td>
-                <td>12–14</td>
-                <td>14–16</td>
-                <td>16–18</td>
-              </tr>
-              <tr>
-                <th>Lun 22</th>
-                <td>11–13</td>
-                <td>13–15</td>
-                <td>15–17</td>
-                <td>17–19</td>
-              </tr>
-              <tr>
-                <th>Mar 23</th>
-                <td>12–14</td>
-                <td>14–16</td>
-                <td>16–18</td>
-                <td>18–20</td>
-              </tr>
-            </tbody>
-          </table>
+          <Turnos />
           <div className="note">
             <Icon name="i-info" /> Por ahora solo está fijada la 1ª clase: sáb 20, 17:00–19:00. El resto los confirma el
             camp según la marea.
           </div>
         </div>
 
-        <h2 className="section-h" style={{ fontSize: "1.4rem", margin: "18px 0 4px" }}>
-          Mar y tiempo
-        </h2>
+        <div className="section-head">
+          <h2 className="section-h" style={{ fontSize: "1.4rem", margin: "18px 0 4px" }}>
+            Mar y tiempo
+          </h2>
+          <Freshness />
+        </div>
+        <MeMeto />
         <StatLine />
         <ForecastStrip />
 

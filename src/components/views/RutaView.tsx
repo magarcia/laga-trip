@@ -1,4 +1,5 @@
 import { useNowValue } from "../../contexts";
+import { BUS_LAGA } from "../../lib/busLaga";
 import { B, lagaDay, legState } from "../../lib/timeline";
 import { Icon } from "../Icon";
 import { Leg } from "../ruta/Leg";
@@ -150,7 +151,7 @@ export function RutaView({ active, showPast, onTogglePast }: RutaViewProps) {
                 <Icon name="i-waves" />
                 Surf
               </dt>
-              <dd>iniciación · 4 clases · estar 30 min antes</dd>
+              <dd>4 clases · estar 30 min antes</dd>
             </dl>
             <div className="mapembed leg-extra">
               {active && (
@@ -180,6 +181,78 @@ export function RutaView({ active, showPast, onTogglePast }: RutaViewProps) {
               >
                 <Icon name="i-nav" />
                 Playa
+              </a>
+            </div>
+
+            <div className="where leg-extra">
+              <Icon name="i-bus" /> A la playa · Bizkaibus {BUS_LAGA.line}
+            </div>
+            {BUS_LAGA.directions.map((dir) => (
+              <div className="leg-extra" key={dir.label}>
+                <dl className="meta">
+                  <dt>
+                    <Icon name="i-nav" />
+                    {dir.label}
+                  </dt>
+                  <dd>
+                    {dir.from.name} <Icon name="i-chev" className="ic ar" /> {dir.to.name}
+                  </dd>
+                </dl>
+                <ul className="timechips" aria-label={`Salidas ${dir.label}`}>
+                  {dir.departures.map((t) => (
+                    <li key={t} className="timechip mono">
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+                <div className="note">{dir.note}</div>
+              </div>
+            ))}
+            <dl className="meta leg-extra">
+              <dt>
+                <Icon name="i-clock" />
+                Puerta a puerta
+              </dt>
+              <dd>
+                ~{BUS_LAGA.doorToDoorMins} min: andar ~{BUS_LAGA.walkToStopMins} min ({BUS_LAGA.walkToStopM} m) a Elejalde
+                7, bus ~{BUS_LAGA.journeyMins} min ({BUS_LAGA.busStops} paradas), andar ~{BUS_LAGA.walkToBeachMins} min (
+                {BUS_LAGA.walkToBeachM} m) a la arena · {BUS_LAGA.fareEur.toLocaleString("es-ES")} €
+              </dd>
+              <dt>
+                <Icon name="i-clock" />
+                Frecuencia
+              </dt>
+              <dd>
+                {BUS_LAGA.frequency} · o andando ~{BUS_LAGA.walkMins} min ({BUS_LAGA.walkKm.toLocaleString("es-ES")} km)
+                por la BI-3234
+              </dd>
+            </dl>
+            <div className="leg-extra note">
+              <Icon name="i-info" /> Horarios orientativos: el servicio cambia en verano y hay obras en Gernika con
+              desvíos. Confirma las salidas en vivo antes de ir.
+            </div>
+            <div className="mapembed leg-extra">
+              {active && (
+                <iframe
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Ruta en transporte público del hostel a Playa de Laga"
+                  src="https://maps.google.com/maps?saddr=Laga+Surf+Camp+Hostel,+Elexalde+Auzoa+11,+48311+Elexalde&daddr=Playa+de+Laga,+Ibarrangelu,+Bizkaia&dirflg=r&output=embed"
+                ></iframe>
+              )}
+            </div>
+            <div className="actions leg-extra">
+              <a className="btn btn-primary" target="_blank" rel="noopener" href={BUS_LAGA.links.ruta}>
+                <Icon name="i-nav" />
+                Ruta a la playa
+              </a>
+              <a className="btn" target="_blank" rel="noopener" href={BUS_LAGA.links.salidasVivo}>
+                <Icon name="i-clock" />
+                Salidas en vivo
+              </a>
+              <a className="btn" target="_blank" rel="noopener" href={BUS_LAGA.links.horarios}>
+                <Icon name="i-bus" />
+                Línea {BUS_LAGA.line}
               </a>
             </div>
           </Leg>

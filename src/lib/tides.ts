@@ -155,3 +155,10 @@ export function tideMarker(dateStr: string, mins: number): TideMarker | null {
   const anch = tideAnchors(ex);
   return { x: tX(mins), y: tY(tideHeight(anch, mins)) };
 }
+
+// Cosine-interpolated tide height (m) at a given minute, for the per-day detail rows. null off-calendar.
+export function tideHeightAt(dateStr: string, mins: number): number | null {
+  const ex = TIDES[dateStr];
+  if (!ex) return null;
+  return tideHeight(tideAnchors(ex), mins);
+}
