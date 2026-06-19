@@ -1,0 +1,14 @@
+{
+  "name": "Laga · Surf Trip",
+  "short_name": "Laga",
+  "description": "Trip dashboard for the Laga surf trip (20-24 jun 2026)",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0c2624",
+  "theme_color": "#0e2a2a",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

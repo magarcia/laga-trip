@@ -1,0 +1,13 @@
+{
+  // Static-asset-only Worker (no server code). Serves /public on a custom domain.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "laga-trip",
+  "compatibility_date": "2026-06-19",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "laga.magarcia.run", "custom_domain": true }
+  ]
+}

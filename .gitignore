@@ -1,0 +1,10 @@
+node_modules/
+.wrangler/
+.DS_Store
+*.log
+
+# local agent tooling + third-party skill content (not app code)
+.claude/
+
+# handoff doc contains private booking codes/PIN/names — never publish
+HANDOFF.md
