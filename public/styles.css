@@ -80,6 +80,8 @@ body.is-offline .offline{display:block}
   color:#fff; isolation:isolate}
 /* background image layer: scrolls with hero by default; becomes a fixed parallax layer when motion is allowed */
 .hoy-bg{position:absolute; inset:0; z-index:-2; overflow:hidden; background:#0c2624 center/cover no-repeat}
+/* media wrapper must fill the layer, else img{height:100%} collapses to the photo's intrinsic height */
+.hero-media{position:absolute; inset:0}
 .hoy-bg img{width:100%;height:100%;object-fit:cover;display:block}
 /* Scrim lives on the hero (not the parallax layer) so it always aligns with the text block, and stays
    light: a gentle bottom wash that seats the copy without crushing the photo to black. Legibility is
