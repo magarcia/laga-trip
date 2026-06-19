@@ -1,5 +1,5 @@
 // Offline cache for the Laga trip app. Bump CACHE on every content change.
-const CACHE = "laga-trip-v4";
+const CACHE = "laga-trip-v5";
 const ASSETS = [
   "/", "/index.html", "/styles.css", "/app.js", "/manifest.webmanifest", "/icon.svg",
   "/fonts/bricolage-700.woff2", "/fonts/bricolage-800.woff2",
