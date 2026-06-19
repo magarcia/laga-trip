@@ -9,8 +9,11 @@ export function ForecastStrip() {
   const now = useNowValue();
   const model = useForecastModel();
   const ds = mDate(now);
-  // Accordion: at most one day expanded. null = all collapsed (the default, byte-identical look).
-  const [openDate, setOpenDate] = useState<string | null>(null);
+  // Accordion: at most one day expanded. Default to today's card if the trip is in progress; otherwise
+  // (pre/post trip) all collapsed. In frozen ?now= mode "today" is the frozen date, so its card auto-opens.
+  const [openDate, setOpenDate] = useState<string | null>(() =>
+    model.days.some((d) => d.date === ds) ? ds : null,
+  );
   const openDay = openDate ? model.hourly.find((h) => h.date === openDate) : undefined;
 
   return (

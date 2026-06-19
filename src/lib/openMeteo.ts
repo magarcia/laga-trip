@@ -34,7 +34,7 @@ const OFFSHORE_FROM_HI = OFFSHORE_CENTER + SECTOR_HALF_WIDTH; // 199
 const WEATHER_URL =
   `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}` +
   `&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weather_code,uv_index_max,wind_speed_10m_max,wind_direction_10m_dominant` +
-  `&hourly=wind_speed_10m,wind_direction_10m` +
+  `&hourly=wind_speed_10m,wind_direction_10m,temperature_2m,weather_code` +
   `&timezone=${TZ}&start_date=${START}&end_date=${END}`;
 
 const MARINE_URL =
@@ -51,7 +51,7 @@ const PORTUS_SST_URL =
 const FETCH_TIMEOUT_MS = 8000;
 
 // WMO weather code -> short Spanish sky label.
-const WMO_ES: Record<number, string> = {
+export const WMO_ES: Record<number, string> = {
   0: "Despejado",
   1: "Poco nuboso",
   2: "Nubes y claros",
@@ -81,6 +81,18 @@ const WMO_ES: Record<number, string> = {
   96: "Tormenta",
   99: "Tormenta",
 };
+
+// Short ES sky label for a raw WMO code (used by the per-hour detail grid). Falls back to "Despejado".
+export function skyLabelEs(code: number): string {
+  return WMO_ES[code] ?? "Despejado";
+}
+
+// Map a WMO code onto an existing Sprite symbol. No cloud/snow/storm glyphs exist, so wet codes use the
+// water drop and everything else uses the sun; the ES label always carries the precise meaning as text.
+const WET_WMO_LO = 51; // drizzle/rain/showers/thunderstorm range start
+export function skyIconFor(code: number): string {
+  return code >= WET_WMO_LO ? "i-drop" : "i-sun";
+}
 
 // 16-point compass, Spanish abbreviations (NO/SO use the Spanish O for Oeste).
 const COMPASS_ES = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO"];
@@ -175,6 +187,8 @@ function hourPointAt(marine: Hourly, weather: Hourly, mi: number, wi: number, la
     windSeaDirDeg: Math.round(numOr(num(marine.wind_wave_direction, mi), fallback.windSeaDirDeg)),
     windSpeed: Math.round(numOr(num(weather.wind_speed_10m, wi), fallback.windSpeed)),
     windDirDeg: Math.round(numOr(num(weather.wind_direction_10m, wi), fallback.windDirDeg)),
+    tempC: Math.round(numOr(num(weather.temperature_2m, wi), fallback.tempC)),
+    skyCode: Math.round(numOr(num(weather.weather_code, wi), fallback.skyCode)),
     energy: relativeEnergy(waveHeight, wavePeriod),
   };
 }
@@ -416,6 +430,8 @@ function reviveHourPoint(raw: unknown, fallback: HourPoint): HourPoint {
     windSeaDirDeg: numOr(c.windSeaDirDeg, fallback.windSeaDirDeg),
     windSpeed: numOr(c.windSpeed, fallback.windSpeed),
     windDirDeg: numOr(c.windDirDeg, fallback.windDirDeg),
+    tempC: numOr(c.tempC, fallback.tempC),
+    skyCode: numOr(c.skyCode, fallback.skyCode),
     // Recompute from the (possibly seeded) values so the index stays internally consistent.
     energy: relativeEnergy(waveHeight, wavePeriod),
   };

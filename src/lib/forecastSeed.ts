@@ -15,8 +15,25 @@ export function relativeEnergy(waveHeight: number, wavePeriod: number): number {
 
 // Per-day hourly seed at 3-hourly resolution (8 points: 00h,03h,...,21h). Values taper across the window
 // to match the daily seed (0.7 -> 0.6 on the 23rd -> 0.4 on the 24th), swell from the NO (315°), light
-// winds. Plausible, readable, and the true offline/parity oracle for the detail view.
-function seedHours(peakWave: number, period: number): HourPoint[] {
+// winds. Air temperature follows a diurnal curve between the day's tMin (pre-dawn) and tMax (mid-afternoon),
+// and the sky code matches the day's seeded sky. Plausible, readable, and the true offline/parity oracle
+// for the detail view.
+interface SeedHourArgs {
+  peakWave: number;
+  period: number;
+  tMin: number;
+  tMax: number;
+  skyCode: number;
+}
+
+// Diurnal air temperature: coolest ~05h, warmest ~15h, sweeping tMin..tMax. Rounded to whole degrees.
+function seedTempAt(hour: number, tMin: number, tMax: number): number {
+  const swing = Math.cos(((hour - 15) / 24) * 2 * Math.PI); // +1 at 15h, -1 at 03h
+  const t = (tMax + tMin) / 2 + ((tMax - tMin) / 2) * swing;
+  return Math.round(t);
+}
+
+function seedHours({ peakWave, period, tMin, tMax, skyCode }: SeedHourArgs): HourPoint[] {
   const points: HourPoint[] = [];
   for (let h = 0; h < 24; h += 3) {
     // A gentle diurnal ripple around the day's peak so the 3-hourly curve is not flat.
@@ -37,18 +54,21 @@ function seedHours(peakWave: number, period: number): HourPoint[] {
       windSeaDirDeg: 0,
       windSpeed: 10,
       windDirDeg: 0,
+      tempC: seedTempAt(h, tMin, tMax),
+      skyCode,
       energy: relativeEnergy(waveHeight, period),
     });
   }
   return points;
 }
 
+// skyCode 0 = "Despejado" (clear), matching every day's seeded skyLabel.
 const SEED_HOURLY: HourlyDay[] = [
-  { date: "2026-06-20", hours: seedHours(0.7, 9) },
-  { date: "2026-06-21", hours: seedHours(0.7, 9) },
-  { date: "2026-06-22", hours: seedHours(0.7, 8) },
-  { date: "2026-06-23", hours: seedHours(0.6, 8) },
-  { date: "2026-06-24", hours: seedHours(0.4, 8) },
+  { date: "2026-06-20", hours: seedHours({ peakWave: 0.7, period: 9, tMin: 18, tMax: 24, skyCode: 0 }) },
+  { date: "2026-06-21", hours: seedHours({ peakWave: 0.7, period: 9, tMin: 18, tMax: 31, skyCode: 0 }) },
+  { date: "2026-06-22", hours: seedHours({ peakWave: 0.7, period: 8, tMin: 22, tMax: 30, skyCode: 0 }) },
+  { date: "2026-06-23", hours: seedHours({ peakWave: 0.6, period: 8, tMin: 20, tMax: 29, skyCode: 0 }) },
+  { date: "2026-06-24", hours: seedHours({ peakWave: 0.4, period: 8, tMin: 23, tMax: 32, skyCode: 0 }) },
 ];
 
 export const FORECAST_SEED: ForecastModel = {

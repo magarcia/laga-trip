@@ -60,6 +60,8 @@ export interface HourPoint {
   windSeaDirDeg: number; // wind-sea direction
   windSpeed: number; // km/h
   windDirDeg: number; // wind FROM-direction
+  tempC: number; // air temperature, °C (rounded)
+  skyCode: number; // raw WMO weather code; the view maps it to an ES label + icon
   energy: number; // derived RELATIVE swell-energy index (not calibrated kJ)
 }
 

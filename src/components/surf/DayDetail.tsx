@@ -1,6 +1,6 @@
-import { useState } from "react";
 import type { HourlyDay, HourPoint } from "../../types/forecast";
 import { nf1 } from "../../lib/format";
+import { skyIconFor, skyLabelEs } from "../../lib/openMeteo";
 import { tideHeightAt } from "../../lib/tides";
 import { Icon } from "../Icon";
 import { DirArrow } from "./DirArrow";
@@ -15,10 +15,9 @@ function energyBand(energy: number): "lo" | "mid" | "hi" {
   return "lo";
 }
 
-// "cada 3h" shows every Nth point so an hourly (24-pt) live series collapses to 8 columns; the 3-hourly
-// seed already has 8, so the stride is 1 there.
-function sampleColumns(hours: HourPoint[], threeHourly: boolean): HourPoint[] {
-  if (!threeHourly) return hours;
+// Always 3-hourly: collapse an hourly (24-pt) live series to the 8 three-hour columns; the seed is
+// already 3-hourly so it passes through unchanged.
+function sampleColumns(hours: HourPoint[]): HourPoint[] {
   if (hours.length <= 8) return hours; // seed / already coarse
   return hours.filter((h) => h.minutes % 180 === 0);
 }
@@ -30,22 +29,10 @@ function bar(height: number, max: number): number {
 const BAR_MAX_M = 1.0; // little wave-height bars in the detail grid; Laga rarely exceeds this
 
 export function DayDetail({ day }: { day: HourlyDay }) {
-  const [threeHourly, setThreeHourly] = useState(true);
-  const cols = sampleColumns(day.hours, threeHourly);
+  const cols = sampleColumns(day.hours);
 
   return (
-    <div className="daydetail" role="group" aria-label={`Detalle por horas del ${day.date}`}>
-      <div className="daydetail-toolbar">
-        <div className="seg" role="group" aria-label="Resolución">
-          <button className="seg-btn" aria-pressed={threeHourly} onClick={() => setThreeHourly(true)}>
-            cada 3h
-          </button>
-          <button className="seg-btn" aria-pressed={!threeHourly} onClick={() => setThreeHourly(false)}>
-            cada hora
-          </button>
-        </div>
-      </div>
-
+    <div className="daydetail" role="group" aria-label={`Detalle cada 3 horas del ${day.date}`}>
       <div className="daydetail-scroll">
         <table className="dd-grid">
           <thead>
@@ -59,7 +46,37 @@ export function DayDetail({ day }: { day: HourlyDay }) {
             </tr>
           </thead>
           <tbody>
-            {/* 1. Olas combinadas: bar + height + period + direction */}
+            {/* 1. Temperatura del aire */}
+            <tr>
+              <th scope="row" className="dd-rowhead">
+                Temp
+              </th>
+              {cols.map((h) => (
+                <td key={h.minutes} className="dd-temp">
+                  <span className="dd-num mono">{h.tempC}°</span>
+                </td>
+              ))}
+            </tr>
+
+            {/* 2. Cielo (WMO -> ES label + icon) */}
+            <tr>
+              <th scope="row" className="dd-rowhead">
+                Cielo
+              </th>
+              {cols.map((h) => {
+                const label = skyLabelEs(h.skyCode);
+                return (
+                  <td key={h.minutes} className="dd-sky" title={label}>
+                    <span className="dd-cell">
+                      <Icon name={skyIconFor(h.skyCode)} className="ic dd-sky-ic" />
+                      <span className="dd-sub dd-sky-label">{label}</span>
+                    </span>
+                  </td>
+                );
+              })}
+            </tr>
+
+            {/* 3. Olas combinadas: bar + height + period + direction */}
             <tr>
               <th scope="row" className="dd-rowhead">
                 Olas
@@ -78,7 +95,7 @@ export function DayDetail({ day }: { day: HourlyDay }) {
               ))}
             </tr>
 
-            {/* 2. Energía (relativa) */}
+            {/* 4. Energía (relativa) */}
             <tr>
               <th scope="row" className="dd-rowhead">
                 Energía<span className="dd-rel"> (rel.)</span>
@@ -90,7 +107,7 @@ export function DayDetail({ day }: { day: HourlyDay }) {
               ))}
             </tr>
 
-            {/* 3. Viento: arrow + speed */}
+            {/* 5. Viento: arrow + speed */}
             <tr>
               <th scope="row" className="dd-rowhead">
                 Viento
@@ -106,7 +123,7 @@ export function DayDetail({ day }: { day: HourlyDay }) {
               ))}
             </tr>
 
-            {/* 4. Marea sampled at each column time */}
+            {/* 6. Marea sampled at each column time */}
             <tr>
               <th scope="row" className="dd-rowhead">
                 Marea
