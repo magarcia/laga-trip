@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { buildTide, TIDES, tideHeightAt, tideMarker } from "./tides";
 
 const DAY = "2026-06-21";
-// Extremes for the 21st: [191, 0.36 B], [571, 3.2 P], [923, 0.62 B], [1311, 3.46 P].
+// Extremes for the 21st: [249, 0.92 B], [635, 3.25 P], [989, 1.16 B], [1379, 3.46 P].
 const EXTREMES = TIDES[DAY];
 
 describe("tideHeightAt", () => {

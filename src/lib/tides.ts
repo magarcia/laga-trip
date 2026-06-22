@@ -1,15 +1,23 @@
 import { hhmm, nf1 } from "./format";
 
-// Tide extremes per day (CEST). [minutesFromMidnight, heightM, kind] — "B" bajamar / "P" pleamar.
+// Tide extremes per day in local CEST (Europe/Madrid wall clock, UTC+2 in June).
+// [minutesFromMidnight, heightM, kind] — "B" bajamar / "P" pleamar.
 // Static astronomical data, not weather — no live refresh.
+//
+// Provenance: 22–23 Jun are tide-table values (CEST). 20–21 Jun are derived by astronomical
+// extrapolation backward from the 22–23 reference (≈63 min/day lunar retardation; heights follow the
+// smooth spring→neap trend) — accurate to a few minutes, heights approximate.
+// Note: 22 Jun has only three in-day extremes; its following high falls at 00:02 on the 23rd, so it is
+// listed there. (The previous data carried a spurious fourth extreme at ~22:49 — the symptom of an old
+// UTC+1/CET vs UTC+2/CEST off-by-one that pulled the next day's high back into the 22nd.)
 export type TideKind = "B" | "P";
 export type Extreme = readonly [min: number, height: number, kind: TideKind];
 
 export const TIDES: Record<string, readonly Extreme[]> = {
-  "2026-06-20": [[137, 0.17, "B"], [517, 3.38, "P"], [870, 0.44, "B"], [1256, 3.67, "P"]],
-  "2026-06-21": [[191, 0.36, "B"], [571, 3.2, "P"], [923, 0.62, "B"], [1311, 3.46, "P"]],
-  "2026-06-22": [[246, 0.57, "B"], [627, 3.03, "P"], [980, 0.8, "B"], [1369, 3.24, "P"]],
-  "2026-06-23": [[304, 0.75, "B"], [687, 2.91, "P"], [1042, 0.95, "B"], [1430, 3.05, "P"]],
+  "2026-06-20": [[186, 0.78, "B"], [572, 3.3, "P"], [926, 1.05, "B"], [1316, 3.55, "P"]],
+  "2026-06-21": [[249, 0.92, "B"], [635, 3.25, "P"], [989, 1.16, "B"], [1379, 3.46, "P"]],
+  "2026-06-22": [[312, 1.06, "B"], [698, 3.21, "P"], [1052, 1.26, "B"]],
+  "2026-06-23": [[2, 3.36, "P"], [375, 1.2, "B"], [761, 3.17, "P"], [1120, 1.33, "B"]],
 };
 
 export const TIDE_DAYS: readonly { date: string; label: string }[] = [
